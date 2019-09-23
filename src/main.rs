@@ -356,10 +356,10 @@ fn interact(mut s: &mut TcpStream, db: &rusqlite::Connection, mut transport: sno
             ContentProtocolMessage::Respond(content) => {
                 match content {
                     ContentPiece::Body(content) => {
-                        eprintln!("{}", format!("{:?}", content).blue());
                         store_content_body(&db, &content);
 
                         let hash: [u8;32] = Keccak256::new().chain(&serialize(&content).unwrap()).result().into();
+                        eprintln!("{}", format!("{:x?}", hash).blue());
                         if let Some(prev) = content.prev {
                             if ask_for_content_body(&mut s, &db, &mut transport, prev) {
                                 s.shutdown(std::net::Shutdown::Both);
