@@ -1,0 +1,8 @@
+#+TITLE: bottle-core
+
+Send messages in an overly complicated way
+
+#+BEGIN_SRC: bash
+./bottle-core 8080 localhost:8081 person1.db
+./bottle-core 8081 localhost:8080 person2.db
+#+END_SRC
