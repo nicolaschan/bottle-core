@@ -317,21 +317,21 @@ enum ContentProtocolMessage {
 
 fn ask_for_content_body(mut s: &mut TcpStream, db: &rusqlite::Connection, mut transport: &mut snow::TransportState, hash: [u8;32]) -> bool {
     let mut buf = vec![0u8;65535];
-    let content = get_content_body(db, hash).unwrap();
-    match content {
-        None => {
-            let ask = ContentProtocolMessage::Ask(hash);
-            let len = transport.write_message(&serialize(&ask).unwrap(), &mut buf).unwrap();
-            send(&mut s, &buf[..len]);
-            false
-        },
-        Some(c) => {
-            match c.prev {
-                Some(hash) => ask_for_content_body(s, db, transport, hash),
-                None => true
-            }
-        }
+    let mut current_hash = hash;
+    let mut content = get_content_body(db, hash).unwrap();
+    while let Some(c) = content {
+        match c.prev {
+            Some(prev) => {
+                current_hash = prev;
+                content = get_content_body(db, prev).unwrap();
+            },
+            None => return true
+        };
     }
+    let ask = ContentProtocolMessage::Ask(current_hash);
+    let len = transport.write_message(&serialize(&ask).unwrap(), &mut buf).unwrap();
+    send(&mut s, &buf[..len]);
+    return false;
 }
 
 fn print_content(db: &rusqlite::Connection, hash: [u8;32]) {
