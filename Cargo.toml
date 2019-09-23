@@ -1,0 +1,21 @@
+[package]
+name = "bottle-core"
+version = "0.1.0"
+authors = ["Nicolas Chan <nicolas@nicolaschan.com>"]
+edition = "2018"
+
+[dependencies]
+bincode = "1.1.4"
+colored = "1.8"
+ed25519-dalek = { version = "1.0.0-pre.1", features = [ "serde" ] }
+generic-array = "0.13.2"
+lazy_static = "1.4.0"
+rand = "0.6"
+ron = "0.5.1"
+rusqlite = { version = "0.20.0", features = [ "bundled" ] }
+serde = { version = "1.0", features = [ "derive" ] }
+sha3 = "0.8.2"
+snow = { version = "0.6.1", features = [ "ring-resolver" ] }
+tempfile = "3.1.0"
+typenum = "1.11.2"
+x25519-dalek = "0.5"
